@@ -1,0 +1,73 @@
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment: 
+      - DATABASE_URL=postgres://postgres:postgres@shopping_cart_postgres:5432/shopping_cart?sslmode=disable
+      - REDIS_URL=redis://shopping_cart_redis:6379
+      - RESERVATION_SERVICE_URL=http://reservation-service:8081
+    depends_on:
+      shopping_cart_postgres:
+        condition: service_healthy
+      shopping_cart_redis:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/app/migrations
+      - ./config.yaml:/app/config.yaml
+    networks:
+      - mynetwork
+    command: >
+      sh -c '
+        echo "Waiting for postgres..." &&
+        while ! nc -z shopping_cart_postgres 5432; do
+          sleep 1;
+        done &&
+        echo "PostgreSQL started" &&
+        migrate -path=/app/migrations -database="$${DATABASE_URL}" up &&
+        /shopping-cart --config-path config.yaml
+      '
+
+  shopping_cart_postgres:
+    container_name: shopping_cart_postgres
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=shopping_cart
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - mynetwork
+
+  shopping_cart_redis:
+    container_name: shopping_cart_redis
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - mynetwork
+
+volumes:
+  postgres_data:
+
+networks:
+  mynetwork:
+    driver: bridge

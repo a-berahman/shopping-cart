@@ -1,0 +1,26 @@
+server:
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout: 15s
+  write_timeout: 15s
+  idle_timeout: 60s
+
+database_url: "postgres://postgres:postgres@shopping_cart_postgres:5432/shopping_cart?sslmode=disable"
+redis_url: "redis://shopping_cart_redis:6379"
+
+
+reservation:
+  service_url: "http://reservation-service:8081"
+  timeout: 30s
+  retry_attempts: 3
+  retry_delay: 5s
+  mock_enabled: false
+  mock_latency: 2s
+  mock_failure_rate: 0.1
+
+logger:
+  level: "info"
+  format: "json"
+  output_path: "stdout"
+
+env: "development" # development, production
