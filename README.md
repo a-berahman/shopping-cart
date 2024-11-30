@@ -103,7 +103,7 @@ I follow hexagonal principles while maintaining pragmatic choices for real world
 │   │
 │   ├── core/                   # Business logic and interfaces
 │   │
-│   ├── service/               # Business logic implementation
+│   ├── service/                # Business logic implementation
 │
 │   └── worker/                 # Background job processing
 │
