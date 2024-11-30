@@ -1,6 +1,7 @@
 # Shopping Cart Service
 
 Dear team,
+
 I appreciate the opportunity to share this solution. I've focused on creating a demonestrate both technical excellence and practical considerations. While implementing this solution, I've made deliberate architectural choices that prioritize reliability, maintainability, and scalability.
 I encourage you to pay particular attention to the asynchronous reservation system design, which addresses the unique challenge of handling slow external services without compromising user experience. You'll notice that I've chosen a pragmatic balance between architectural purity and practical implementation.
 In the following documentation, I've detailed not only what has been implemented but also, importantly, what should be considered for a full production deployment. This transparency reflects my belief that acknowledging system limitations and future improvements is as crucial as highlighting current capabilities.
