@@ -6,9 +6,12 @@ I appreciate the opportunity to share this solution. I've focused on creating a 
 I encourage you to pay particular attention to the asynchronous reservation system design, which addresses the unique challenge of handling slow external services without compromising user experience. You'll notice that I've chosen a pragmatic balance between architectural purity and practical implementation.
 In the following documentation, I've detailed not only what has been implemented but also, importantly, what should be considered for a full production deployment. This transparency reflects my belief that acknowledging system limitations and future improvements is as crucial as highlighting current capabilities.
 
+## What is this project?
+This is a shopping cart service that lets users add items to their cart and handles item reservations automatically. The main challenge it solves is "How to handle slow reservation services without making users wait?"
+
 ## Key Features
 
-- Asynchronous processing for reliable item reservation
+- Fast API Responses and asynchronous processing for reliable item reservation
 - Redis-based job queue for guaranteed message delivery
 - PostgreSQL for persistent storage
 - Configuration management
@@ -61,6 +64,58 @@ curl http://localhost:8080/api/v1/items
 I follow hexagonal principles while maintaining pragmatic choices for real world requirements, the core domain remains isolated from external concerns through well defined ports, while adapters handle infrastructure interactions.
 
 ![Hexagonal-2024-11-30-232514](https://github.com/user-attachments/assets/d3fd94d5-c11c-4df2-bbbd-0c70b6c10eb1)
+
+
+
+### Architecture Benefits:
+
+1. **Separation of Concerns**:
+   - Clear boundaries between layers
+   - Business logic isolated from external concerns
+   - Easy to modify or replace components
+
+2. **Testability**:
+   - Easy to mock external dependencies
+   - Clear interfaces for testing
+   - Business logic can be tested in isolation
+
+3. **Maintainability**:
+   - Clear folder structure
+   - Well defined responsibilities
+
+4. **Flexibility**:
+   - Easy to add new features
+   - Simple to change external implementations
+
+### Structure
+
+```
+├── cmd/
+│   └── main.go                 # Contains the main application entry point
+│
+├── config/                     # Configuration management
+├── internal/                   # Core application code
+│   ├── adapters/              # IExternal system integrations
+│   │   ├── handler/           # HTTP request handlers
+│   │   ├── repository/        # Database operations
+│   │   ├── queue/            # Queue operations
+│   │   └── reservation/      # External service communication
+│   │       ├── external_service.go
+│   │       └── mock/
+│   │           └── service.go
+│   │
+│   ├── core/                 # CBusiness logic and interfaces
+│   │
+│   ├── service/             # Business logic implementation
+│   │
+│   └── worker/              # Background job processing
+│
+├── migrations/              # Database schema management
+│
+├── scripts/                # Utility scripts
+│   └── migration.sh
+
+```
 
 
 ## Required Enhancements for Production
