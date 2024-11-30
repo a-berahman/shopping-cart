@@ -95,24 +95,21 @@ I follow hexagonal principles while maintaining pragmatic choices for real world
 │
 ├── config/                     # Configuration management
 ├── internal/                   # Core application code
-│   ├── adapters/              # IExternal system integrations
-│   │   ├── handler/           # HTTP request handlers
-│   │   ├── repository/        # Database operations
-│   │   ├── queue/            # Queue operations
-│   │   └── reservation/      # External service communication
-│   │       ├── external_service.go
-│   │       └── mock/
-│   │           └── service.go
+│   ├── adapters/               # External system integrations
+│   │   ├── handler/            # HTTP request handlers
+│   │   ├── repository/         # Database operations
+│   │   ├── queue/              # Queue operations
+│   │   └── reservation/        # External service communication
 │   │
-│   ├── core/                 # CBusiness logic and interfaces
+│   ├── core/                   # Business logic and interfaces
 │   │
-│   ├── service/             # Business logic implementation
-│   │
-│   └── worker/              # Background job processing
+│   ├── service/               # Business logic implementation
 │
-├── migrations/              # Database schema management
+│   └── worker/                 # Background job processing
 │
-├── scripts/                # Utility scripts
+├── migrations/                 # Database schema management
+│
+├── scripts/                    # Utility scripts
 │   └── migration.sh
 
 ```
