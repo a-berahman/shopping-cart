@@ -139,7 +139,7 @@ make coverage
 
 ```
 
-##Conclusion
+## Conclusion
 This implementation demonstrates a production minded approach to building a reliable shopping cart service, while core functionality is complete and robust, I've detailed the necessary enhancements for full production readiness. Also, the architecture allows for easy extension and maintenance.
 
 
