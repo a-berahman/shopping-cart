@@ -81,9 +81,9 @@ func (q *RedisQueue) CompleteJob(ctx context.Context, job *domain.ReservationJob
 	}
 
 	pipe := q.client.Pipeline()
-	// Remove from processing set
+	// remove from processing set
 	pipe.LRem(ctx, ProcessingSetKey, 0, jobData)
-	// Add to completed set
+	// add to completed set
 	pipe.LPush(ctx, CompletedSetKey, jobData)
 
 	_, err = pipe.Exec(ctx)
@@ -99,9 +99,9 @@ func (q *RedisQueue) FailJob(ctx context.Context, job *domain.ReservationJob) er
 	}
 
 	pipe := q.client.Pipeline()
-	// Remove from processing set
+	// removing from processing set
 	pipe.LRem(ctx, ProcessingSetKey, 0, jobData)
-	// Add to failed set
+	// adding to failed set
 	pipe.LPush(ctx, FailedSetKey, jobData)
 
 	_, err = pipe.Exec(ctx)
@@ -112,7 +112,7 @@ func (q *RedisQueue) FailJob(ctx context.Context, job *domain.ReservationJob) er
 func (q *RedisQueue) RetryFailedJobs(ctx context.Context) error {
 	pipe := q.client.Pipeline()
 
-	// Move all failed jobs back to pending queue
+	// we move all failed jobs back to pending queue
 	pipe.LRange(ctx, FailedSetKey, 0, -1).Result()
 	pipe.Del(ctx, FailedSetKey)
 

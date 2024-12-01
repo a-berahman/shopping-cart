@@ -13,16 +13,12 @@ type Config struct {
 	DatabaseURL string            `mapstructure:"database_url"`
 	RedisURL    string            `mapstructure:"redis_url"`
 	Reservation ReservationConfig `mapstructure:"reservation"`
-	Logger      LoggerConfig      `mapstructure:"logger"`
 	Env         string            `mapstructure:"env"`
 }
 
 type ServerConfig struct {
-	Host         string        `mapstructure:"host"`
-	Port         int           `mapstructure:"port"`
-	ReadTimeout  time.Duration `mapstructure:"read_timeout"`
-	WriteTimeout time.Duration `mapstructure:"write_timeout"`
-	IdleTimeout  time.Duration `mapstructure:"idle_timeout"`
+	Host string `mapstructure:"host"`
+	Port int    `mapstructure:"port"`
 }
 
 type ReservationConfig struct {

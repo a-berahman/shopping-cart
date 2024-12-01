@@ -67,22 +67,22 @@ type application struct {
 }
 
 func initializeApplication(ctx context.Context, logger *slog.Logger, cfg *config.Config) (*application, error) {
-	// Database initialization
+	// Setup database
 	db, err := repository.NewPostgresDB(cfg.DatabaseURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize database: %w", err)
 	}
 
-	// Redis queue initialization
+	// Setup Redis queue
 	redisQueue, err := queue.NewRedisQueue(cfg.RedisURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize Redis queue: %w", err)
 	}
 
-	// Repository setup
+	// Setup repository
 	repo := repository.NewRepository(db)
 
-	// Reservation service setup
+	// Setup reservation service
 	var reservationSvc ports.ReservationService
 	if cfg.Env == "production" {
 		reservationSvc = reservation.NewService(cfg.Reservation.ServiceURL)
@@ -94,14 +94,14 @@ func initializeApplication(ctx context.Context, logger *slog.Logger, cfg *config
 		reservationSvc = mock.NewMockReservationService(mockConfig)
 	}
 
-	// Service and worker setup
+	// Setup service and worker
 	cartService := service.NewCartService(repo, redisQueue, reservationSvc)
 	worker := worker.NewReservationWorker(redisQueue, reservationSvc, repo)
 
 	// Start worker
 	go worker.Start(ctx)
 
-	// Echo server setup
+	// Setup server
 	server := setupEcho(logger)
 	handler.NewHandler(cartService).Register(server)
 
@@ -136,30 +136,10 @@ func setupEcho(logger *slog.Logger) *echo.Echo {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
-	// e.Use(requestTimer(logger))
 
 	e.Validator = &CustomValidator{Validator: validator.New()}
 	return e
 }
-
-// func requestTimer(logger *slog.Logger) echo.MiddlewareFunc {
-// 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-// 		return func(c echo.Context) error {
-// 			start := time.Now()
-// 			err := next(c)
-// 			duration := time.Since(start)
-
-// 			logger.Info("request completed",
-// 				"method", c.Request().Method,
-// 				"path", c.Request().URL.Path,
-// 				"status", c.Response().Status,
-// 				"duration", duration.String(),
-// 				"duration_ms", duration.Milliseconds(),
-// 			)
-// 			return err
-// 		}
-// 	}
-// }
 
 type CustomValidator struct {
 	Validator *validator.Validate

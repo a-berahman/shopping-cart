@@ -65,11 +65,8 @@ server:
 			configPath: validConfigPath,
 			want: &Config{
 				Server: ServerConfig{
-					Host:         "localhost",
-					Port:         8080,
-					ReadTimeout:  5 * time.Second,
-					WriteTimeout: 10 * time.Second,
-					IdleTimeout:  15 * time.Second,
+					Host: "localhost",
+					Port: 8080,
 				},
 				DatabaseURL: "postgres://user:pass@localhost:5432/db?sslmode=disable",
 				RedisURL:    "redis://localhost:6379",
@@ -81,11 +78,6 @@ server:
 					MockEnabled:     true,
 					MockLatency:     100 * time.Millisecond,
 					MockFailureRate: 0.1,
-				},
-				Logger: LoggerConfig{
-					Level:      "info",
-					Format:     "json",
-					OutputPath: "stdout",
 				},
 				Env: "development",
 			},
@@ -111,11 +103,8 @@ server:
 			},
 			want: &Config{
 				Server: ServerConfig{
-					Host:         "localhost",
-					Port:         8080,
-					ReadTimeout:  5 * time.Second,
-					WriteTimeout: 10 * time.Second,
-					IdleTimeout:  15 * time.Second,
+					Host: "localhost",
+					Port: 8080,
 				},
 				DatabaseURL: "postgres://other:pass@otherhost:5432/db",
 				RedisURL:    "redis://localhost:6379",
@@ -127,11 +116,6 @@ server:
 					MockEnabled:     true,
 					MockLatency:     100 * time.Millisecond,
 					MockFailureRate: 0.1,
-				},
-				Logger: LoggerConfig{
-					Level:      "info",
-					Format:     "json",
-					OutputPath: "stdout",
 				},
 				Env: "development",
 			},
@@ -159,7 +143,6 @@ server:
 				assert.Equal(t, tt.want.DatabaseURL, got.DatabaseURL)
 				assert.Equal(t, tt.want.RedisURL, got.RedisURL)
 				assert.Equal(t, tt.want.Reservation, got.Reservation)
-				assert.Equal(t, tt.want.Logger, got.Logger)
 				assert.Equal(t, tt.want.Env, got.Env)
 			}
 		})

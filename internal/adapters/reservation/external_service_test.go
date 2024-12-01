@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func setupTestServer(t *testing.T, handler http.HandlerFunc) (*Service, *httptest.Server) {
+func setupTestServer(handler http.HandlerFunc) (*Service, *httptest.Server) {
 	server := httptest.NewServer(handler)
 	service := NewService(server.URL)
 	service.httpClient.Timeout = 1 * time.Second
@@ -95,7 +95,7 @@ func TestCheckAvailability(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			handler, _ := tt.mockServer()
-			service, server := setupTestServer(t, handler)
+			service, server := setupTestServer(handler)
 			defer server.Close()
 
 			got, err := service.CheckAvailability(context.Background(), tt.itemName, tt.quantity)
@@ -183,7 +183,7 @@ func TestReserveItem(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			handler, _ := tt.mockServer()
-			service, server := setupTestServer(t, handler)
+			service, server := setupTestServer(handler)
 			defer server.Close()
 
 			got, err := service.ReserveItem(context.Background(), tt.itemName, tt.quantity)

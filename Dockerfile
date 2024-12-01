@@ -36,5 +36,4 @@ ENV TZ=UTC
 
 EXPOSE 8080
 
-# ENTRYPOINT ["shopping-cart"]
 CMD ["/shopping-cart", "--config-path", "config.yaml"]

@@ -232,7 +232,9 @@ func TestListItems(t *testing.T) {
 				err = json.Unmarshal(rec.Body.Bytes(), &actual)
 				require.NoError(t, err)
 
-				// Remove time fields for array of items
+				// remove time fields for array of items
+				// this is not a good practice but for the sake of this project and the test I will do this
+				// in a real application we should use a different approach to handle time fields
 				if items, ok := actual.([]interface{}); ok {
 					for _, item := range items {
 						if m, ok := item.(map[string]interface{}); ok {

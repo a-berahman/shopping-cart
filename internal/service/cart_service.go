@@ -53,7 +53,6 @@ func (s *CartService) AddItemToCart(ctx context.Context, name string, quantity i
 
 	// why enqueue? because we want to reserve the item in the background
 	// so that we can return the item to the user immediately
-
 	if err := s.queue.EnqueueReservation(ctx, job); err != nil {
 		// If enqueueing fails, we should mark the item as failed
 		item.Status = domain.StatusReservationFailed

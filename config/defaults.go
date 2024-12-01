@@ -7,21 +7,17 @@ import (
 )
 
 func setDefaults(v *viper.Viper) {
-	// Server defaults
+	// server default
 	v.SetDefault("server.host", "0.0.0.0")
 	v.SetDefault("server.port", 8080)
-	v.SetDefault("server.read_timeout", time.Second*15)
-	v.SetDefault("server.write_timeout", time.Second*15)
-	v.SetDefault("server.idle_timeout", time.Second*60)
 
-	// Database defaults
+	// satabase default
 	v.SetDefault("database_url", "postgres://postgres:postgres@localhost:5432/shopping_cart?sslmode=disable")
 
-	// Redis defaults
-	v.SetDefault("redis.db", 0)
-	v.SetDefault("redis.pool_size", 10)
+	// redis default
+	v.SetDefault("redis_url", "redis://localhost:6379")
 
-	// Reservation service defaults
+	// reservation service default
 	v.SetDefault("reservation.timeout", time.Second*30)
 	v.SetDefault("reservation.retry_attempts", 3)
 	v.SetDefault("reservation.retry_delay", time.Second*5)
@@ -29,8 +25,4 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("reservation.mock_latency", time.Second*2)
 	v.SetDefault("reservation.mock_failure_rate", 0.1)
 
-	// Logger defaults
-	v.SetDefault("logger.level", "info")
-	v.SetDefault("logger.format", "json")
-	v.SetDefault("logger.output_path", "stdout")
 }

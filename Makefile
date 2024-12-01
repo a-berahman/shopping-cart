@@ -19,7 +19,7 @@ run:
 stop:
 	@echo "Stopping application..."
 	@docker-compose -f $(DOCKER_COMPOSE) down --volumes
-	@echo "Appli
+	@echo "Application stopped"
 
 .PHONY: logs
 logs:
