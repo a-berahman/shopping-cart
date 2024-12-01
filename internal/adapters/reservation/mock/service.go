@@ -33,15 +33,13 @@ func NewMockReservationService(config MockConfig) *MockReservationService {
 }
 
 type MockConfig struct {
-	LatencyRange time.Duration // Maximum artificial delay
-	FailureRate  float64       // Rate of simulated failures (0.0 to 1.0)
+	LatencyRange time.Duration // maximum artificial delay
+	FailureRate  float64       // rate of simulated failures (take into account it can be 0.0 to 1.0)
 }
 
 func (m *MockReservationService) CheckAvailability(ctx context.Context, itemName string, quantity int) (bool, error) {
-	// Simulate network latency
 	m.simulateLatency()
 
-	// Simulate potential failures
 	if m.shouldFail() {
 		return false, fmt.Errorf("service temporarily unavailable")
 	}
@@ -58,10 +56,9 @@ func (m *MockReservationService) CheckAvailability(ctx context.Context, itemName
 }
 
 func (m *MockReservationService) ReserveItem(ctx context.Context, itemName string, quantity int) (string, error) {
-	// Simulate network latency
+
 	m.simulateLatency()
 
-	// Simulate potential failures
 	if m.shouldFail() {
 		return "", fmt.Errorf("reservation failed: service temporarily unavailable")
 	}
@@ -78,16 +75,15 @@ func (m *MockReservationService) ReserveItem(ctx context.Context, itemName strin
 		return "", fmt.Errorf("insufficient inventory")
 	}
 
-	// Generate a reservation ID
-	reservationID := fmt.Sprintf("RSV-%s-%d", itemName, time.Now().Unix())
+	reservationID := fmt.Sprintf("RSV-%s-%d", itemName, time.Now().Unix()) // generate a reservation ID
 
-	// Update inventory
-	m.inventory[itemName] = available - quantity
+	m.inventory[itemName] = available - quantity // updating inventory
 	m.reservations[reservationID] = true
 
 	return reservationID, nil
 }
 
+// simulateLatency simulates network latency
 func (m *MockReservationService) simulateLatency() {
 	if m.latencyRange > 0 {
 		delay := time.Duration(rand.Int63n(int64(m.latencyRange)))
@@ -95,19 +91,7 @@ func (m *MockReservationService) simulateLatency() {
 	}
 }
 
+// shouldFail simulates potential failures
 func (m *MockReservationService) shouldFail() bool {
 	return rand.Float64() < m.failureRate
-}
-
-// Additional methods for demonstration control
-func (m *MockReservationService) SetInventory(itemName string, quantity int) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-	m.inventory[itemName] = quantity
-}
-
-func (m *MockReservationService) GetInventory(itemName string) int {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	return m.inventory[itemName]
 }

@@ -51,7 +51,6 @@ migrate-version:
 sqlc:
 	sqlc generate
 
-# Development commands
 .PHONY: test
 test:
 	@echo "Running tests..."
