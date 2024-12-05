@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_items_status ON items(status); 
